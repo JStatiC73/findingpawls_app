@@ -122,7 +122,10 @@ public static class MauiProgram
         // El registro exitoso NO guarda sesion — el usuario debe hacer login manual.
         builder.Services.AddTransient<RegisterViewModel>(sp =>
             new RegisterViewModel(sp.GetRequiredService<AuthApiService>()));
-        builder.Services.AddTransient<FeedViewModel>();
+        builder.Services.AddTransient<FeedViewModel>(sp =>
+            new FeedViewModel(
+                sp.GetRequiredService<FeedApiService>(),
+                sp.GetRequiredService<AuthTokenService>()));
         builder.Services.AddTransient<MascotasViewModel>();
         builder.Services.AddTransient<MascotaDetailViewModel>();
         builder.Services.AddTransient<CreateMascotaViewModel>();

@@ -1,5 +1,37 @@
 namespace FindingPawls.Models;
 
+// Item unificado del feed personalizado.
+// Refleja EXACTAMENTE el FeedItemDto del API.
+// - PublicacionID (no EntidadID)
+// - FotoURL (mayuscula, no FotoUrl)
+// - Tipo es string serializado desde el enum TipoPublicacion del API:
+//   "Adopcion" | "Extravio" | "AnimalCallejero"
+public class FeedItem
+{
+    public Guid PublicacionID { get; set; }
+    public string Tipo { get; set; } = string.Empty;
+    public string Titulo { get; set; } = string.Empty;
+    public string? Descripcion { get; set; }
+    public string? FotoURL { get; set; }
+    public string? Especie { get; set; }
+    public string? Raza { get; set; }
+    public string? Color { get; set; }
+    public double? Latitud { get; set; }
+    public double? Longitud { get; set; }
+    public double? DistanciaKm { get; set; }
+    public string? Estado { get; set; }
+    public DateTime? FechaPublicacion { get; set; }
+    public string AutorNombre { get; set; } = string.Empty;
+
+    // Helper para obtener el tipo de publicacion normalizado para navegacion.
+    // "AnimalCallejero" del API se mapea a "Callejero" para las rutas de la app.
+    public string TipoNormalizado => Tipo switch
+    {
+        "AnimalCallejero" => "Callejero",
+        _ => Tipo
+    };
+}
+
 // Reporte de animal callejero publicado por un usuario.
 public class ReporteCallejero
 {
@@ -44,19 +76,6 @@ public class NotificacionPreferencias
     public bool ExtraviosCercanos { get; set; } = true;
     public bool Calificaciones { get; set; } = true;
     public bool CallejerosCercanos { get; set; } = true;
-}
-
-// Item del feed combinado: puede ser extravio, adopcion o callejero.
-public class FeedItem
-{
-    public Guid EntidadID { get; set; }
-    public string Tipo { get; set; } = string.Empty; // "Extravio" | "Adopcion" | "Callejero"
-    public string Titulo { get; set; } = string.Empty;
-    public string? Descripcion { get; set; }
-    public string? FotoUrl { get; set; }
-    public double? DistanciaKm { get; set; }
-    public DateTime? FechaPublicacion { get; set; }
-    public string Estado { get; set; } = string.Empty;
 }
 
 // Estadisticas del perfil del usuario.

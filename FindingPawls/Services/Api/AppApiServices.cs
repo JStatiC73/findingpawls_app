@@ -420,6 +420,8 @@ public class FeedApiService : BaseApiService
     }
 
     // Obtiene el feed personalizado del usuario con publicaciones cercanas.
+    // El parametro tipo acepta: null (todos), "Extravio", "Adopcion", "AnimalCallejero".
+    // NOTA: el API recibe "Tipos" como lista de query params repetidos.
     public async Task<(List<FeedItem> Items, string? Error)> ObtenerFeedAsync(
         double latitud, double longitud, double radioKm = 10, string? tipo = null, int pagina = 1)
     {
@@ -427,9 +429,18 @@ public class FeedApiService : BaseApiService
         {
             await PrepararAutorizacionAsync();
 
-            string url = $"feed?Latitud={latitud}&Longitud={longitud}&RadioKm={radioKm}&Pagina={pagina}";
-            if (!string.IsNullOrEmpty(tipo))
-                url += $"&Tipo={tipo}";
+            // El API acepta Tipos como parametros repetidos: &Tipos=Adopcion&Tipos=Extravio
+            // Si tipo es null, no se agrega filtro y el API retorna todos los tipos.
+            string tipoApiParam = tipo switch
+            {
+                "Callejero" => "AnimalCallejero",  // Mapeo: nombre interno -> enum del API
+                _ => tipo ?? string.Empty
+            };
+
+            string url = $"feed?Latitud={latitud}&Longitud={longitud}&RadioKm={radioKm}&Pagina={pagina}&TamanoPagina=20";
+
+            if (!string.IsNullOrEmpty(tipoApiParam))
+                url += $"&Tipos={tipoApiParam}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(url);
 

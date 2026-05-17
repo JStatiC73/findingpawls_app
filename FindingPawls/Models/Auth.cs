@@ -1,15 +1,23 @@
 namespace FindingPawls.Models;
 
 // Datos de autenticacion retornados por el API tras login o registro exitoso.
+// IMPORTANTE: El API retorna los datos del usuario PLANOS (no anidados en un objeto Usuario).
+// Nombres de propiedades deben coincidir EXACTAMENTE con el JSON del API (case-insensitive OK).
 public class AuthResponse
 {
+    public Guid UsuarioID { get; set; }
+    public string Nombre { get; set; } = string.Empty;
+    public string Correo { get; set; } = string.Empty;
     public string AccessToken { get; set; } = string.Empty;
     public string RefreshToken { get; set; } = string.Empty;
-    public DateTime ExpiresAt { get; set; }
-    public UsuarioPerfil Usuario { get; set; } = new();
+    // El API retorna "AccessTokenExpiration", no "ExpiresAt".
+    public DateTime AccessTokenExpiration { get; set; }
+    public DateTime RefreshTokenExpiration { get; set; }
+    public bool RequiereVerificacionCorreo { get; set; }
 }
 
-// Datos del usuario autenticado incluidos en la respuesta de auth.
+// Perfil del usuario autenticado almacenado en memoria durante la sesion.
+// Se construye a partir de los campos planos de AuthResponse.
 public class UsuarioPerfil
 {
     public Guid UsuarioID { get; set; }

@@ -15,10 +15,15 @@ public class InvertBoolConverter : IValueConverter
 
 // Convierte un string o valor nulo al estado de visibilidad.
 // Visible si el valor NO es nulo ni cadena vacia.
+// Si ConverterParameter es "invert", invierte el resultado (visible si ES nulo/vacio).
 public class NotNullOrEmptyToBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        => value is string s ? !string.IsNullOrEmpty(s) : value != null;
+    {
+        bool tieneValor = value is string s ? !string.IsNullOrEmpty(s) : value != null;
+        bool invertir = parameter?.ToString()?.ToLower() == "invert";
+        return invertir ? !tieneValor : tieneValor;
+    }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();

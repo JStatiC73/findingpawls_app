@@ -1,11 +1,391 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="FindingPawls.Views.Feed.FeedPage">
-    <!-- TODO: Implementar UI de la pantalla -->
-    <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
-        <Label Text="FeedPage" Style="{StaticResource TextH2}" HorizontalOptions="Center" />
-        <Label Text="En construccion" Style="{StaticResource TextBodySecondary}" HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    xmlns:vm="clr-namespace:FindingPawls.ViewModels.Feed"
+    xmlns:models="clr-namespace:FindingPawls.Models"
+    x:Class="FindingPawls.Views.Feed.FeedPage"
+    x:DataType="vm:FeedViewModel"
+    Title="Finding Pawls">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- =====================================================
+             HEADER: gradiente verde con titulo y busqueda
+        ====================================================== -->
+        <Grid Grid.Row="0">
+            <BoxView HeightRequest="130">
+                <BoxView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#2E7D5E" Offset="0.0"/>
+                        <GradientStop Color="#4CAF82" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </BoxView.Background>
+            </BoxView>
+
+            <!-- Decoracion circular -->
+            <Ellipse WidthRequest="120" HeightRequest="120" Fill="#15FFFFFF"
+                     HorizontalOptions="End" VerticalOptions="Start" Margin="0,-30,-30,0"/>
+
+            <Grid ColumnDefinitions="*,Auto" Padding="20,20,20,16" VerticalOptions="Center">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <!-- Saludo personalizado con el primer nombre del usuario logueado -->
+                    <Label FontFamily="InterRegular" FontSize="13" TextColor="#C8F0DC">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Hola " />
+                                <Span Text="{Binding NombreUsuario}" FontFamily="InterSemiBold" />
+                                <Span Text=" 👋" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="Actividad cercana" FontFamily="InterBold" FontSize="22" TextColor="White"/>
+                </VerticalStackLayout>
+
+                <!-- Boton de notificaciones: navega a NotificacionesPage -->
+                <Border Grid.Column="1"
+                        WidthRequest="44" HeightRequest="44"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="#33FFFFFF"
+                        StrokeThickness="0"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding VerNotificacionesCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="🔔" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- =====================================================
+             CHIPS DE FILTRO: Todos / Extravíos / Adopciones / Callejeros
+             Se superponen al header con margen negativo para el efecto "flotante"
+        ====================================================== -->
+        <ScrollView Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,-20,0,0"
+                    Padding="16,0,16,12">
+            <HorizontalStackLayout Spacing="8">
+
+                <!-- Chip: Todos -->
+                <Border StrokeShape="RoundRectangle 20" StrokeThickness="1.5" Padding="16,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AplicarFiltroCommand}" CommandParameter="{x:Null}"/>
+                    </Border.GestureRecognizers>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroTodos}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimary}"/>
+                            <Setter Property="Stroke" Value="{StaticResource ColorPrimary}"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroTodos}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}"/>
+                            <Setter Property="Stroke" Value="{StaticResource ColorBorder}"/>
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Text="Todos" FontFamily="InterSemiBold" FontSize="13">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding FiltroTodos}" Value="True">
+                                <Setter Property="TextColor" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label" Binding="{Binding FiltroTodos}" Value="False">
+                                <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                </Border>
+
+                <!-- Chip: Extravíos -->
+                <Border StrokeShape="RoundRectangle 20" StrokeThickness="1.5" Padding="16,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AplicarFiltroCommand}" CommandParameter="Extravio"/>
+                    </Border.GestureRecognizers>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroExtravios}" Value="True">
+                            <Setter Property="BackgroundColor" Value="#D32F2F"/>
+                            <Setter Property="Stroke" Value="#D32F2F"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroExtravios}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}"/>
+                            <Setter Property="Stroke" Value="{StaticResource ColorBorder}"/>
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="🔍" FontSize="13"/>
+                        <Label Text="Extraviados" FontFamily="InterSemiBold" FontSize="13">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroExtravios}" Value="True">
+                                    <Setter Property="TextColor" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroExtravios}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Chip: Adopciones -->
+                <Border StrokeShape="RoundRectangle 20" StrokeThickness="1.5" Padding="16,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AplicarFiltroCommand}" CommandParameter="Adopcion"/>
+                    </Border.GestureRecognizers>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroAdopciones}" Value="True">
+                            <Setter Property="BackgroundColor" Value="#1976D2"/>
+                            <Setter Property="Stroke" Value="#1976D2"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroAdopciones}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}"/>
+                            <Setter Property="Stroke" Value="{StaticResource ColorBorder}"/>
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="🏠" FontSize="13"/>
+                        <Label Text="Adopciones" FontFamily="InterSemiBold" FontSize="13">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroAdopciones}" Value="True">
+                                    <Setter Property="TextColor" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroAdopciones}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Chip: Callejeros -->
+                <Border StrokeShape="RoundRectangle 20" StrokeThickness="1.5" Padding="16,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AplicarFiltroCommand}" CommandParameter="Callejero"/>
+                    </Border.GestureRecognizers>
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroCallejeros}" Value="True">
+                            <Setter Property="BackgroundColor" Value="#F5A623"/>
+                            <Setter Property="Stroke" Value="#F5A623"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding FiltroCallejeros}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}"/>
+                            <Setter Property="Stroke" Value="{StaticResource ColorBorder}"/>
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="🐾" FontSize="13"/>
+                        <Label Text="Callejeros" FontFamily="InterSemiBold" FontSize="13">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroCallejeros}" Value="True">
+                                    <Setter Property="TextColor" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding FiltroCallejeros}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </Border>
+
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- =====================================================
+             CUERPO: estados de carga / vacio / error / lista
+        ====================================================== -->
+        <Grid Grid.Row="2">
+
+            <!-- Estado: cargando por primera vez -->
+            <VerticalStackLayout
+                IsVisible="{Binding IsBusy}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Spacing="16">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" WidthRequest="48" HeightRequest="48"/>
+                <Label Text="Buscando actividad cercana..." Style="{StaticResource TextBodySecondary}" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Estado: sin resultados -->
+            <VerticalStackLayout
+                IsVisible="{Binding MostrarVacio}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Spacing="16"
+                Padding="40,0">
+                <Label Text="🐾" FontSize="56" HorizontalOptions="Center"/>
+                <Label Text="Sin actividad cercana"
+                       FontFamily="InterBold" FontSize="18"
+                       TextColor="{StaticResource ColorTextPrimary}"
+                       HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <Label Text="No hay publicaciones en tu area. Prueba ampliando el radio o cambiando el filtro."
+                       Style="{StaticResource TextBodySecondary}"
+                       HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <Button Text="Actualizar" Command="{Binding RefrescarCommand}" Style="{StaticResource ButtonSecondary}" Margin="0,8,0,0"/>
+            </VerticalStackLayout>
+
+            <!-- Estado: error -->
+            <VerticalStackLayout
+                IsVisible="{Binding MostrarError}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Spacing="16"
+                Padding="40,0">
+                <Label Text="⚠️" FontSize="48" HorizontalOptions="Center"/>
+                <Label Text="No se pudo cargar el feed"
+                       FontFamily="InterBold" FontSize="18"
+                       TextColor="{StaticResource ColorTextPrimary}"
+                       HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextBodySecondary}"
+                       HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <Button Text="Reintentar" Command="{Binding RefrescarCommand}" Style="{StaticResource ButtonPrimary}" Margin="0,8,0,0"/>
+            </VerticalStackLayout>
+
+            <!-- Lista principal del feed con pull-to-refresh.
+                 IsVisible=MostrarLista: solo visible cuando hay items Y no hay estados de error/vacio.
+                 Esto garantiza que los botones Reintentar/Actualizar sean accesibles. -->
+            <RefreshView
+                IsRefreshing="{Binding IsRefreshing}"
+                Command="{Binding RefrescarCommand}"
+                IsVisible="{Binding MostrarLista}">
+
+                <CollectionView
+                    ItemsSource="{Binding Items}"
+                    RemainingItemsThreshold="3"
+                    RemainingItemsThresholdReachedCommand="{Binding CargarMasCommand}"
+                    SelectionMode="None">
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="12"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.Header>
+                        <BoxView HeightRequest="8" Color="Transparent"/>
+                    </CollectionView.Header>
+
+                    <CollectionView.Footer>
+                        <!-- Indicador de carga de mas items al final -->
+                        <VerticalStackLayout Padding="0,8,0,24">
+                            <ActivityIndicator
+                                IsRunning="{Binding IsLoadingMore}"
+                                IsVisible="{Binding IsLoadingMore}"
+                                HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.Footer>
+
+                    <!-- DataTemplate de cada card del feed -->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:FeedItem">
+                            <Border Style="{StaticResource CardBase}" Margin="16,0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FeedViewModel}}, Path=VerDetalleCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+
+                                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*" ColumnSpacing="12" RowSpacing="8">
+
+                                    <!-- Imagen de la publicacion -->
+                                    <Border
+                                        Grid.Row="0" Grid.RowSpan="3" Grid.Column="0"
+                                        WidthRequest="80" HeightRequest="80"
+                                        StrokeShape="RoundRectangle 12"
+                                        StrokeThickness="0"
+                                        BackgroundColor="{StaticResource ColorSurface}"
+                                        VerticalOptions="Start">
+                                        <Grid>
+                                            <!-- Imagen si existe URL -->
+                                            <Image
+                                                Source="{Binding FotoURL, Converter={StaticResource UrlToImage}}"
+                                                Aspect="AspectFill"
+                                                IsVisible="{Binding FotoURL, Converter={StaticResource NotNullOrEmpty}}"/>
+                                            <!-- Emoji placeholder si no hay foto -->
+                                            <Label
+                                                FontSize="36"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding FotoURL, Converter={StaticResource NotNullOrEmpty}, ConverterParameter=invert}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Tipo}" Value="Extravio">
+                                                        <Setter Property="Text" Value="🔍"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Tipo}" Value="Adopcion">
+                                                        <Setter Property="Text" Value="🏠"/>
+                                                    </DataTrigger>
+                                                    <!-- El API retorna "AnimalCallejero" (valor del enum TipoPublicacion) -->
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Tipo}" Value="AnimalCallejero">
+                                                        <Setter Property="Text" Value="🐾"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Fila 1: Badge de tipo + tiempo relativo -->
+                                    <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Badge de tipo con color dinamico -->
+                                        <Border
+                                            Grid.Column="0"
+                                            Style="{StaticResource BadgeBase}"
+                                            BackgroundColor="{Binding Tipo, Converter={StaticResource TipoFeedColor}}">
+                                            <Label
+                                                Text="{Binding Tipo}"
+                                                Style="{StaticResource BadgeText}"
+                                                TextColor="White"/>
+                                        </Border>
+
+                                        <!-- Tiempo relativo -->
+                                        <Label
+                                            Grid.Column="2"
+                                            Text="{Binding FechaPublicacion, Converter={StaticResource FechaRelativa}}"
+                                            Style="{StaticResource TextCaption}"
+                                            VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Fila 2: Titulo -->
+                                    <Label
+                                        Grid.Row="1" Grid.Column="1"
+                                        Text="{Binding Titulo}"
+                                        FontFamily="InterSemiBold"
+                                        FontSize="15"
+                                        TextColor="{StaticResource ColorTextPrimary}"
+                                        LineBreakMode="TailTruncation"
+                                        MaxLines="2"/>
+
+                                    <!-- Fila 3: Descripcion breve + distancia -->
+                                    <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*,Auto">
+                                        <Label
+                                            Grid.Column="0"
+                                            Text="{Binding Descripcion}"
+                                            Style="{StaticResource TextBodySecondary}"
+                                            FontSize="13"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            IsVisible="{Binding Descripcion, Converter={StaticResource NotNullOrEmpty}}"/>
+
+                                        <!-- Chip de distancia -->
+                                        <Border
+                                            Grid.Column="1"
+                                            StrokeShape="RoundRectangle 8"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeThickness="0"
+                                            Padding="8,3"
+                                            HorizontalOptions="End"
+                                            IsVisible="{Binding DistanciaKm, Converter={StaticResource NotNullOrEmpty}}">
+                                            <Label
+                                                Text="{Binding DistanciaKm, Converter={StaticResource DistanciaTexto}}"
+                                                FontFamily="InterSemiBold"
+                                                FontSize="11"
+                                                TextColor="{StaticResource ColorPrimary}"/>
+                                        </Border>
+                                    </Grid>
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </RefreshView>
+
+        </Grid>
+    </Grid>
 </ContentPage>
