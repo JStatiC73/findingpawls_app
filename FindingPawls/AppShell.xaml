@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FindingPawls.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:feed="clr-namespace:FindingPawls.Views.Feed"
+    xmlns:extravios="clr-namespace:FindingPawls.Views.Extravios"
+    xmlns:adopciones="clr-namespace:FindingPawls.Views.Adopciones"
+    xmlns:notificaciones="clr-namespace:FindingPawls.Views.Notificaciones"
+    xmlns:perfil="clr-namespace:FindingPawls.Views.Perfil"
+    Title="Finding Pawls">
+
+    <!-- Tab 1: Feed / Inicio - publicaciones cercanas combinadas -->
+    <TabBar>
+        <Tab Title="Inicio" Icon="tab_feed.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate feed:FeedPage}"
+                Route="FeedPage" />
+        </Tab>
+
+        <!-- Tab 2: Extravios - mascotas perdidas cercanas -->
+        <Tab Title="Extravios" Icon="tab_extravios.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate extravios:ExtraviosPage}"
+                Route="ExtraviosPage" />
+        </Tab>
+
+        <!-- Tab 3: Adopciones - mascotas en adopcion cercanas -->
+        <Tab Title="Adopciones" Icon="tab_adopciones.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate adopciones:AdopcionesPage}"
+                Route="AdopcionesPage" />
+        </Tab>
+
+        <!-- Tab 4: Notificaciones - avisos de actividad relevante -->
+        <Tab Title="Avisos" Icon="tab_notificaciones.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate notificaciones:NotificacionesPage}"
+                Route="NotificacionesPage" />
+        </Tab>
+
+        <!-- Tab 5: Perfil - cuenta del usuario y ajustes -->
+        <Tab Title="Perfil" Icon="tab_perfil.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate perfil:PerfilPage}"
+                Route="PerfilPage" />
+        </Tab>
+    </TabBar>
+
+</Shell>

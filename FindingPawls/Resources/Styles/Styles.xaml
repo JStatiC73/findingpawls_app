@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- =========================================================
+         ESTILOS GLOBALES - FINDING PAWLS
+         Estilos reutilizables por toda la aplicacion.
+         Se basa en los tokens definidos en Colors.xaml.
+         El objetivo es consistencia visual sin duplicar propiedades.
+    ========================================================== -->
+
+    <!-- Shell: barra de navegacion y tabs -->
+    <Style TargetType="Shell" ApplyToDerivedTypes="True">
+        <Setter Property="Shell.BackgroundColor" Value="{StaticResource ColorNavigationBar}" />
+        <Setter Property="Shell.ForegroundColor" Value="{StaticResource ColorNavigationBarText}" />
+        <Setter Property="Shell.TitleColor" Value="{StaticResource ColorNavigationBarText}" />
+        <Setter Property="Shell.DisabledColor" Value="{StaticResource ColorTextDisabled}" />
+        <Setter Property="Shell.UnselectedColor" Value="{StaticResource ColorTabBarUnselected}" />
+        <Setter Property="Shell.NavBarHasShadow" Value="True" />
+        <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource ColorTabBarBackground}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource ColorTabBarSelected}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource ColorTabBarSelected}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource ColorTabBarUnselected}" />
+    </Style>
+
+    <!-- ContentPage: fondo base -->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBackground}" />
+    </Style>
+
+    <!-- NavigationPage: barra superior -->
+    <Style TargetType="NavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource ColorNavigationBar}" />
+        <Setter Property="BarTextColor" Value="{StaticResource ColorNavigationBarText}" />
+    </Style>
+
+    <!-- =========================================================
+         TIPOGRAFIA
+    ========================================================== -->
+
+    <!-- Titulo de pantalla: H1 -->
+    <Style x:Key="TextH1" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterBold" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+    <!-- Titulo de seccion: H2 -->
+    <Style x:Key="TextH2" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="LineHeight" Value="1.3" />
+    </Style>
+
+    <!-- Titulo de card: H3 -->
+    <Style x:Key="TextH3" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="LineHeight" Value="1.3" />
+    </Style>
+
+    <!-- Subtitulo -->
+    <Style x:Key="TextSubtitle" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}" />
+    </Style>
+
+    <!-- Cuerpo de texto normal -->
+    <Style x:Key="TextBody" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="LineHeight" Value="1.5" />
+    </Style>
+
+    <!-- Texto secundario / descriptivo -->
+    <Style x:Key="TextBodySecondary" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <!-- Caption / metadata pequeño -->
+    <Style x:Key="TextCaption" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextSecondary}" />
+    </Style>
+
+    <!-- Texto de error de validacion -->
+    <Style x:Key="TextValidationError" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{StaticResource ColorError}" />
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- Label generico base -->
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+    </Style>
+
+    <!-- =========================================================
+         BOTONES
+    ========================================================== -->
+
+    <!-- Boton primario: accion principal de la pantalla -->
+    <Style x:Key="ButtonPrimary" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextOnPrimary}" />
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="Padding" Value="24,0" />
+    </Style>
+
+    <!-- Boton secundario: accion alternativa -->
+    <Style x:Key="ButtonSecondary" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="TextColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="BorderColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="BorderWidth" Value="1.5" />
+        <Setter Property="Padding" Value="24,0" />
+    </Style>
+
+    <!-- Boton de peligro: eliminar, cancelar irreversible -->
+    <Style x:Key="ButtonDanger" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorError}" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextOnPrimary}" />
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="Padding" Value="24,0" />
+    </Style>
+
+    <!-- Boton texto / link: sin fondo -->
+    <Style x:Key="ButtonText" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="Padding" Value="8,0" />
+    </Style>
+
+    <!-- Boton base heredado -->
+    <Style TargetType="Button">
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextOnPrimary}" />
+    </Style>
+
+    <!-- =========================================================
+         CAMPOS DE ENTRADA
+    ========================================================== -->
+
+    <!-- Entry: campo de texto de una linea -->
+    <Style TargetType="Entry">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource ColorTextDisabled}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="HeightRequest" Value="52" />
+    </Style>
+
+    <!-- Editor: campo de texto multilinea -->
+    <Style TargetType="Editor">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource ColorTextDisabled}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="MinimumHeightRequest" Value="100" />
+    </Style>
+
+    <!-- Picker -->
+    <Style TargetType="Picker">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="TitleColor" Value="{StaticResource ColorTextDisabled}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="HeightRequest" Value="52" />
+    </Style>
+
+    <!-- SearchBar -->
+    <Style TargetType="SearchBar">
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource ColorTextDisabled}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="CancelButtonColor" Value="{StaticResource ColorPrimary}" />
+    </Style>
+
+    <!-- Switch -->
+    <Style TargetType="Switch">
+        <Setter Property="OnColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="ThumbColor" Value="{StaticResource ColorTextOnPrimary}" />
+    </Style>
+
+    <!-- Slider -->
+    <Style TargetType="Slider">
+        <Setter Property="MinimumTrackColor" Value="{StaticResource ColorPrimary}" />
+        <Setter Property="MaximumTrackColor" Value="{StaticResource ColorBorder}" />
+        <Setter Property="ThumbColor" Value="{StaticResource ColorPrimary}" />
+    </Style>
+
+    <!-- =========================================================
+         CONTENEDORES Y CARDS
+    ========================================================== -->
+
+    <!-- Card base: superficie elevada con sombra -->
+    <Style x:Key="CardBase" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="Stroke" Value="{StaticResource ColorBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ColorTextPrimary}"
+                        Offset="0,2"
+                        Radius="8"
+                        Opacity="0.06" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Card compacta: para items de lista -->
+    <Style x:Key="CardCompact" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorCard}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="{StaticResource ColorBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="{StaticResource ColorTextPrimary}"
+                        Offset="0,1"
+                        Radius="4"
+                        Opacity="0.05" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Contenedor de campo de formulario: agrupa label + entry + error -->
+    <Style x:Key="FormFieldContainer" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4" />
+    </Style>
+
+    <!-- Campo de entrada con borde: envuelve Entry en un Border -->
+    <Style x:Key="EntryBordered" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="{StaticResource ColorBorder}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="HeightRequest" Value="52" />
+    </Style>
+
+    <!-- Separador horizontal -->
+    <Style x:Key="Divider" TargetType="BoxView">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorDivider}" />
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!-- =========================================================
+         INDICADORES Y BADGES
+    ========================================================== -->
+
+    <!-- Badge de tipo de publicacion -->
+    <Style x:Key="BadgeBase" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+    </Style>
+
+    <!-- Texto dentro de un badge -->
+    <Style x:Key="BadgeText" TargetType="Label">
+        <Setter Property="FontFamily" Value="InterSemiBold" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="TextTransform" Value="Uppercase" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- ActivityIndicator: usa color primario -->
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource ColorPrimary}" />
+    </Style>
+
+    <!-- RefreshView -->
+    <Style TargetType="RefreshView">
+        <Setter Property="RefreshColor" Value="{StaticResource ColorPrimary}" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FindingPawls.ViewModels.Auth"
+    x:Class="FindingPawls.Views.Auth.RegisterPage"
+    x:DataType="vm:RegisterViewModel"
+    Title="Crear cuenta"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*">
+
+            <!-- Encabezado -->
+            <Grid Grid.Row="0">
+                <BoxView HeightRequest="200">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2E7D5E" Offset="0.0" />
+                            <GradientStop Color="#4CAF82" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8" Padding="0,24,0,24">
+                    <Label
+                        Text="Crea tu cuenta"
+                        FontFamily="InterBold"
+                        FontSize="26"
+                        TextColor="White"
+                        HorizontalOptions="Center" />
+                    <Label
+                        Text="Unete a la comunidad Finding Pawls"
+                        FontFamily="InterRegular"
+                        FontSize="13"
+                        TextColor="#B2FFFFFF"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <!-- Boton cerrar modal -->
+                <Button
+                    Text="X"
+                    Command="{Binding CerrarCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    FontSize="16"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Padding="20,16,20,16"
+                    Margin="0,20,0,0" />
+            </Grid>
+
+            <!-- Formulario -->
+            <Border
+                Grid.Row="1"
+                BackgroundColor="{StaticResource ColorBackground}"
+                StrokeShape="RoundRectangle 32,32,0,0"
+                StrokeThickness="0"
+                Margin="0,-24,0,0"
+                Padding="28,32,28,32">
+
+                <VerticalStackLayout Spacing="16">
+
+                    <!-- Nombre completo -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Nombre completo" FontFamily="InterSemiBold" FontSize="13" TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Entry Text="{Binding Nombre}" Placeholder="Tu nombre completo" ReturnType="Next" BackgroundColor="Transparent" BorderWidth="0" />
+                        </Border>
+                        <Label Text="{Binding ErrorNombre}" Style="{StaticResource TextValidationError}" IsVisible="{Binding ErrorNombre, Converter={StaticResource NotNullOrEmpty}}" />
+                    </VerticalStackLayout>
+
+                    <!-- Correo -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Correo electronico" FontFamily="InterSemiBold" FontSize="13" TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Entry Text="{Binding Correo}" Placeholder="tu@correo.com" Keyboard="Email" ReturnType="Next" BackgroundColor="Transparent" BorderWidth="0" />
+                        </Border>
+                        <Label Text="{Binding ErrorCorreo}" Style="{StaticResource TextValidationError}" IsVisible="{Binding ErrorCorreo, Converter={StaticResource NotNullOrEmpty}}" />
+                    </VerticalStackLayout>
+
+                    <!-- Contrasena -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Contrasena" FontFamily="InterSemiBold" FontSize="13" TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Entry Grid.Column="0" Text="{Binding Contrasena}" Placeholder="Min. 8 caracteres" IsPassword="{Binding MostrarContrasena, Converter={StaticResource InvertBool}}" ReturnType="Next" BackgroundColor="Transparent" BorderWidth="0" />
+                                <Button Grid.Column="1" Text="Ver" Command="{Binding AlternarContrasenaCommand}" BackgroundColor="Transparent" TextColor="{StaticResource ColorTextSecondary}" FontSize="11" WidthRequest="50" HeightRequest="52" Padding="0" />
+                            </Grid>
+                        </Border>
+                        <!-- Indicador de fortaleza: FortalezaContrasena va de 0 a 4,
+                             se normaliza a 0.0-1.0 dividiendo entre 4 en code-behind via converter -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" IsVisible="{Binding Contrasena, Converter={StaticResource NotNullOrEmpty}}">
+                            <Label Grid.Column="0" Text="{Binding TextoFortaleza}" FontFamily="InterSemiBold" FontSize="12" TextColor="{Binding ColorFortaleza}" VerticalOptions="Center" />
+                            <ProgressBar Grid.Column="1" Progress="{Binding FortalezaNormalizada}" ProgressColor="{Binding ColorFortaleza}" VerticalOptions="Center" HeightRequest="4" />
+                        </Grid>
+                        <Label Text="{Binding ErrorContrasena}" Style="{StaticResource TextValidationError}" IsVisible="{Binding ErrorContrasena, Converter={StaticResource NotNullOrEmpty}}" />
+                    </VerticalStackLayout>
+
+                    <!-- Confirmar contrasena -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Confirmar contrasena" FontFamily="InterSemiBold" FontSize="13" TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Entry Grid.Column="0" Text="{Binding ConfirmarContrasena}" Placeholder="Repite tu contrasena" IsPassword="{Binding MostrarConfirmar, Converter={StaticResource InvertBool}}" ReturnType="Next" BackgroundColor="Transparent" BorderWidth="0" />
+                                <Button Grid.Column="1" Text="Ver" Command="{Binding AlternarConfirmarCommand}" BackgroundColor="Transparent" TextColor="{StaticResource ColorTextSecondary}" FontSize="11" WidthRequest="50" HeightRequest="52" Padding="0" />
+                            </Grid>
+                        </Border>
+                        <Label Text="{Binding ErrorConfirmar}" Style="{StaticResource TextValidationError}" IsVisible="{Binding ErrorConfirmar, Converter={StaticResource NotNullOrEmpty}}" />
+                    </VerticalStackLayout>
+
+                    <!-- Telefono (opcional) -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Telefono (opcional)" FontFamily="InterSemiBold" FontSize="13" TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Entry Text="{Binding Telefono}" Placeholder="+502 0000-0000" Keyboard="Telephone" ReturnType="Done" ReturnCommand="{Binding RegistrarseCommand}" BackgroundColor="Transparent" BorderWidth="0" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Error general -->
+                    <Border IsVisible="{Binding MostrarErrorGeneral}" BackgroundColor="{StaticResource ColorErrorContainer}" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10">
+                        <Label Text="{Binding ErrorGeneral}" FontFamily="InterRegular" FontSize="13" TextColor="{StaticResource ColorError}" />
+                    </Border>
+
+                    <!-- Boton registrar -->
+                    <Button Text="Crear cuenta" Command="{Binding RegistrarseCommand}" Style="{StaticResource ButtonPrimary}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Margin="0,8,0,0" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <!-- Link a Login -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="4" Padding="0,8,0,0">
+                        <Label Text="Ya tienes cuenta?" FontFamily="InterRegular" FontSize="14" TextColor="{StaticResource ColorTextSecondary}" VerticalOptions="Center" />
+                        <Button Text="Inicia sesion" Command="{Binding IrALoginCommand}" Style="{StaticResource ButtonText}" FontSize="14" />
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

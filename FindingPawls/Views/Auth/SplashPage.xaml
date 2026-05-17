@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="FindingPawls.Views.Auth.SplashPage"
+    BackgroundColor="{StaticResource ColorPrimary}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <!-- Fondo con degradado de verde primario a verde oscuro -->
+        <BoxView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <BoxView.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#2E7D5E" Offset="0.0" />
+                    <GradientStop Color="#1B5E42" Offset="1.0" />
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Elementos decorativos de fondo -->
+        <Ellipse
+            WidthRequest="220"
+            HeightRequest="220"
+            Fill="#1AFFFFFF"
+            HorizontalOptions="End"
+            VerticalOptions="Start"
+            Margin="0,-90,-90,0" />
+        <Ellipse
+            WidthRequest="160"
+            HeightRequest="160"
+            Fill="#12FFFFFF"
+            HorizontalOptions="Start"
+            VerticalOptions="End"
+            Margin="-70,0,0,-70" />
+
+        <!-- Contenido central -->
+        <VerticalStackLayout
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            Spacing="28">
+
+            <!-- Logo en tarjeta blanca con sombra -->
+            <Border
+                WidthRequest="120"
+                HeightRequest="120"
+                StrokeShape="RoundRectangle 30"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                HorizontalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="#40000000" Offset="0,8" Radius="20" Opacity="0.35" />
+                </Border.Shadow>
+                <Image
+                    Source="logo_finding_pawls.jpg"
+                    WidthRequest="88"
+                    HeightRequest="88"
+                    Aspect="AspectFit"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+            </Border>
+
+            <!-- Nombre de la app -->
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label
+                    Text="Finding Pawls"
+                    FontFamily="InterBold"
+                    FontSize="32"
+                    TextColor="White"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center" />
+                <Label
+                    Text="Conectando mascotas con hogares"
+                    FontFamily="InterRegular"
+                    FontSize="14"
+                    TextColor="#C8F0DC"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <!-- Indicador de carga -->
+            <ActivityIndicator
+                IsRunning="True"
+                Color="White"
+                WidthRequest="32"
+                HeightRequest="32"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

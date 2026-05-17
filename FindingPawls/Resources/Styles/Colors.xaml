@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- =========================================================
+         PALETA DE COLORES - FINDING PAWLS
+         Centralizar los colores aqui permite cambiar el tema de
+         la aplicacion en un solo lugar sin tocar pantallas individuales.
+    ========================================================== -->
+
+    <!-- Colores primarios: verde bosque orientado al sector veterinario/animal -->
+    <Color x:Key="ColorPrimary">#2E7D5E</Color>
+    <Color x:Key="ColorPrimaryLight">#4CAF82</Color>
+    <Color x:Key="ColorPrimaryDark">#1B5E42</Color>
+    <Color x:Key="ColorPrimaryContainer">#C8F0DC</Color>
+
+    <!-- Color de acento: ambar para badges de urgencia, alertas, destacados -->
+    <Color x:Key="ColorAccent">#F5A623</Color>
+    <Color x:Key="ColorAccentLight">#FFD166</Color>
+    <Color x:Key="ColorAccentDark">#D4861A</Color>
+
+    <!-- Fondos y superficies -->
+    <Color x:Key="ColorBackground">#F4F7F5</Color>
+    <Color x:Key="ColorSurface">#FFFFFF</Color>
+    <Color x:Key="ColorSurfaceVariant">#E8F2ED</Color>
+    <Color x:Key="ColorCard">#FFFFFF</Color>
+
+    <!-- Texto -->
+    <Color x:Key="ColorTextPrimary">#1A2E25</Color>
+    <Color x:Key="ColorTextSecondary">#6B8A7A</Color>
+    <Color x:Key="ColorTextDisabled">#AABCB4</Color>
+    <Color x:Key="ColorTextOnPrimary">#FFFFFF</Color>
+    <Color x:Key="ColorTextOnAccent">#1A1A1A</Color>
+
+    <!-- Estados semanticos -->
+    <Color x:Key="ColorError">#D32F2F</Color>
+    <Color x:Key="ColorErrorContainer">#FFEBEE</Color>
+    <Color x:Key="ColorSuccess">#388E3C</Color>
+    <Color x:Key="ColorSuccessContainer">#E8F5E9</Color>
+    <Color x:Key="ColorWarning">#F5A623</Color>
+    <Color x:Key="ColorWarningContainer">#FFF8E1</Color>
+    <Color x:Key="ColorInfo">#1976D2</Color>
+    <Color x:Key="ColorInfoContainer">#E3F2FD</Color>
+
+    <!-- Bordes y separadores -->
+    <Color x:Key="ColorBorder">#DDE8E2</Color>
+    <Color x:Key="ColorBorderStrong">#AABCB4</Color>
+    <Color x:Key="ColorDivider">#F0F4F2</Color>
+
+    <!-- Superposiciones y sombras -->
+    <Color x:Key="ColorOverlay">#80000000</Color>
+    <Color x:Key="ColorScrim">#99000000</Color>
+
+    <!-- Colores de estado de mascotas (badges en cards) -->
+    <Color x:Key="ColorStatusActiva">#388E3C</Color>
+    <Color x:Key="ColorStatusExtraviada">#D32F2F</Color>
+    <Color x:Key="ColorStatusAdopcion">#1976D2</Color>
+    <Color x:Key="ColorStatusResuelta">#6B8A7A</Color>
+
+    <!-- Colores de estado de adopcion -->
+    <Color x:Key="ColorAdopcionDisponible">#388E3C</Color>
+    <Color x:Key="ColorAdopcionEnProceso">#F5A623</Color>
+    <Color x:Key="ColorAdopcionCompletada">#1976D2</Color>
+    <Color x:Key="ColorAdopcionCancelada">#9E9E9E</Color>
+
+    <!-- Colores de tipo de feed (chips de filtro) -->
+    <Color x:Key="ColorChipTodos">#2E7D5E</Color>
+    <Color x:Key="ColorChipExtravios">#D32F2F</Color>
+    <Color x:Key="ColorChipAdopciones">#1976D2</Color>
+    <Color x:Key="ColorChipCallejeros">#F5A623</Color>
+
+    <!-- Tab bar -->
+    <Color x:Key="ColorTabBarBackground">#FFFFFF</Color>
+    <Color x:Key="ColorTabBarSelected">#2E7D5E</Color>
+    <Color x:Key="ColorTabBarUnselected">#AABCB4</Color>
+
+    <!-- Shell navigation bar -->
+    <Color x:Key="ColorNavigationBar">#2E7D5E</Color>
+    <Color x:Key="ColorNavigationBarText">#FFFFFF</Color>
+
+</ResourceDictionary>

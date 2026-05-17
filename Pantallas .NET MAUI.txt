@@ -1,0 +1,367 @@
+Pantallas .NET MAUI
+La arquitectura de navegación recomendada es Shell (el estándar moderno de MAUI) con 5 tabs inferiores. Las pantallas de autenticación viven fuera del Shell.
+
+Estructura de navegación
+1. Autenticación (fuera del Shell)
+SplashPage
+
+Tipo: ContentPage (pantalla inicial, sin Shell)
+Objetivo: Verificar si existe un token válido almacenado en SecureStorage. Si existe → redirige al Shell. Si no → redirige a Login.
+Componentes:
+Logo de la app centrado
+ActivityIndicator mientras valida el token
+No hay interacción del usuario
+LoginPage
+
+Tipo: ContentPage (NavigationPage, fuera del Shell)
+Objetivo: Autenticar a un usuario existente con correo y contraseña.
+Componentes:
+Logo / imagen de bienvenida
+Entry — Correo electrónico (teclado email, ReturnType=Next)
+Entry — Contraseña (con IsPassword=true y botón de mostrar/ocultar)
+Button — Iniciar sesión (deshabilitar durante petición)
+ActivityIndicator — visible durante la petición HTTP
+Label con link → RegisterPage
+Label de error (invisible por defecto, visible si login falla)
+RegisterPage
+
+Tipo: ContentPage (modal sobre LoginPage)
+Objetivo: Crear una cuenta nueva.
+Componentes:
+Entry — Nombre completo
+Entry — Correo electrónico
+Entry — Contraseña (con indicador de fortaleza)
+Entry — Confirmar contraseña
+Entry — Teléfono (opcional, teclado telefónico)
+Button — Registrarse
+ActivityIndicator
+Label con link → LoginPage
+Mensajes de validación inline bajo cada campo (FluentValidation errors del API)
+2. Feed / Inicio
+FeedPage
+
+Tipo: ContentPage (Shell Tab 1, raíz)
+Objetivo: Mostrar publicaciones cercanas al usuario combinando extravíos, adopciones y reportes callejeros ordenados por distancia.
+Componentes:
+SearchBar — Filtro por texto (opcional)
+HorizontalStackLayout con chips filtrables: Todos · Extravíos · Adopciones · Callejeros
+Slider o Picker — Rango de distancia (5 km / 10 km / 25 km)
+CollectionView con RefreshView (pull-to-refresh):
+FeedItemTemplate (image thumb, tipo badge, título, distancia, fecha)
+EmptyView — "No hay publicaciones cercanas"
+Paginación incremental (carga más al llegar al final)
+ActivityIndicator de carga inicial
+Label de coordenadas actuales / permiso de ubicación pendiente
+3. Mascotas
+MascotasPage
+
+Tipo: ContentPage (accesible desde Perfil Tab o Flyout)
+Objetivo: Listar todas las mascotas registradas por el usuario autenticado.
+Componentes:
+CollectionView con tarjetas:
+Foto circular, nombre, especie, raza, estado (badge: Activa / Extraviada / En adopción)
+EmptyView — "Aún no tienes mascotas registradas"
+FloatingActionButton (FAB) → CreateMascotaPage
+MascotaDetailPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver todos los datos de una mascota y acceder a acciones sobre ella.
+Componentes:
+CarouselView — Fotos de la mascota
+Grid de datos: Nombre, Especie, Raza, Sexo, Fecha de nacimiento, Color, Esterilizado, Microchip
+Badge de estado actual
+Button — Editar (→ EditMascotaPage)
+Button — Reportar extravío (visible solo si estado = Activa, → CreateExtravioPage)
+Button — Poner en adopción (visible solo si estado = Activa)
+Button — Eliminar (con confirmación)
+CreateMascotaPage / EditMascotaPage
+
+Tipo: ContentPage (modal)
+Objetivo: Registrar una nueva mascota o editar una existente.
+Componentes:
+Image con TapGestureRecognizer → MediaPicker (cámara o galería)
+Entry — Nombre
+Picker — Especie (llama GET /api/catalogos/especies)
+Picker — Raza (filtrado por especie seleccionada, llama GET /api/catalogos/razas)
+Picker — Sexo
+DatePicker — Fecha de nacimiento
+Entry — Color/marcas distintivas
+Switch — Esterilizado
+Entry — Número de microchip (opcional)
+Editor — Descripción adicional
+Button — Guardar
+ActivityIndicator
+4. Adopciones
+AdopcionesPage
+
+Tipo: ContentPage (Shell Tab 3)
+Objetivo: Explorar mascotas disponibles para adopción cercanas al usuario.
+Componentes:
+SearchBar
+Filtros expandibles: Especie, Sexo, Distancia, Esterilizado
+CollectionView con AdopcionCard:
+Foto, nombre de la mascota, especie, distancia, nombre del publicador, rating del publicador
+EmptyView
+FloatingActionButton → CreateAdopcionPage (mis publicaciones)
+Button "Mis publicaciones" → MisAdopcionesPage
+AdopcionDetailPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver el detalle completo de una publicación de adopción y solicitar adopción.
+Componentes:
+CarouselView — Fotos
+Datos de la mascota (especie, raza, sexo, edad, esterilizado)
+Frame con datos del publicador: avatar, nombre, StarRating display, distancia
+Label — Descripción
+Map — Ubicación aproximada (pin no preciso por privacidad)
+Button — "Solicitar adopción" (oculto si es el propio publicador)
+Button — "Ver solicitudes" (visible solo si es el publicador)
+Button — Navegar (→ Waze/Maps via Launcher.OpenAsync)
+CreateAdopcionPage
+
+Tipo: ContentPage (modal)
+Objetivo: Publicar una mascota para adopción.
+Componentes:
+Picker — Seleccionar mascota propia (solo mascotas con estado Activa)
+Editor — Descripción / condiciones de adopción
+Entry — Información de contacto adicional (opcional)
+Button — Seleccionar ubicación (→ MapPickerPage modal)
+Label — Coordenadas seleccionadas
+Button — Publicar
+MisAdopcionesPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver y gestionar las publicaciones de adopción propias.
+Componentes:
+CollectionView con tarjetas de adopción propia:
+Badge de estado (Disponible / Proceso / Completada / Cancelada)
+Contador de solicitudes pendientes
+Al tocar → AdopcionDetailPage en modo propietario (ver solicitudes, aprobar/rechazar)
+5. Extravíos
+ExtraviosPage
+
+Tipo: ContentPage (Shell Tab 2)
+Objetivo: Explorar reportes de mascotas extraviadas cercanas y reportar una propia.
+Componentes:
+Toggle SegmentedControl: Vista Lista / Vista Mapa
+Vista Lista: CollectionView con ExtravioCard (foto, nombre, especie, días desaparecida, distancia)
+Vista Mapa: Map con pines de extravíos (al tocar pin → detalle)
+Slider filtro de distancia
+FloatingActionButton → CreateExtravioPage
+EmptyView
+ExtravioDetailPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver el reporte completo de una mascota extraviada, ver avistamientos y reportar uno nuevo.
+Componentes:
+Foto de la mascota
+Datos: Nombre, Especie, Raza, Sexo, Color, Microchip
+Label — Fecha de extravío
+Map — Última ubicación conocida (pin)
+Label — Descripción / detalles adicionales
+Label — Distancia desde el usuario
+Button — "Reportar avistamiento" (→ CreateAvistamientoPage)
+CollectionView horizontal — Avistamientos recientes (miniatura foto + fecha)
+Button — Ver todos los avistamientos (→ AvistamientosListPage)
+Si es propietario: Button "Cerrar reporte (encontrada)" + Button "Cancelar reporte"
+CreateExtravioPage
+
+Tipo: ContentPage (modal)
+Objetivo: Reportar que una mascota propia se ha extraviado.
+Componentes:
+Picker — Seleccionar mascota (solo mascotas con estado Activa)
+DatePicker — Fecha de extravío
+Button — Seleccionar ubicación del extravío (→ MapPickerPage)
+Label — Ubicación seleccionada
+Editor — Descripción / circunstancias
+Button — Reportar extravío
+AvistamientosListPage
+
+Tipo: ContentPage (push navigation desde ExtravioDetailPage)
+Objetivo: Ver todos los avistamientos registrados para un reporte de extravío.
+Componentes:
+Header con nombre y foto de la mascota buscada
+CollectionView con AvistamientoCard:
+Foto del avistamiento (thumb)
+Fecha y hora
+Distancia desde el lugar del extravío
+Badge de similitud IA (si fue comparada: "92% similar")
+EmptyView — "Aún no hay avistamientos"
+CreateAvistamientoPage
+
+Tipo: ContentPage (modal)
+Objetivo: Reportar un avistamiento de la mascota extraviada con foto y ubicación.
+Componentes:
+Image grande con TapGestureRecognizer → MediaPicker (foto obligatoria)
+Button — Capturar con cámara / Elegir de galería
+Button — Seleccionar ubicación actual o manual (→ MapPickerPage)
+Map pequeño mostrando ubicación seleccionada
+Editor — Descripción (opcional)
+Button — Enviar avistamiento
+AvistamientoDetailPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver el detalle de un avistamiento e iniciar comparación de imágenes con IA.
+Componentes:
+Image — Foto del avistamiento (tappable → ImageViewerPage)
+Map — Ubicación del avistamiento
+Label — Fecha, hora, reportado por
+Frame de similitud IA:
+Si comparada: Score visual (ej. "92% de coincidencia"), imagen comparada
+Si no comparada y es el propietario: Button "Comparar con mascota (IA)"
+Button — Navegar a la ubicación (→ Waze/Maps)
+ActivityIndicator durante la comparación IA
+6. Reportes Callejeros
+ReportesCallejerosPage
+
+Tipo: ContentPage (accesible desde Flyout o Feed)
+Objetivo: Ver reportes de animales callejeros cercanos y crear nuevos reportes.
+Componentes:
+Toggle Lista / Mapa
+Vista Mapa: Map con pines categorizados por estado (colores distintos: activo/resuelto)
+Vista Lista: CollectionView con ReporteCallejeroCard (foto thumb, descripción corta, distancia, estado badge)
+FloatingActionButton → CreateReporteCallejeroPage
+Filtro por estado: Activos / Todos
+ReporteCallejeroDetailPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver el detalle de un reporte de animal callejero.
+Componentes:
+CarouselView — Fotos
+Map — Ubicación exacta
+Label — Descripción, fecha, estado
+Label — Reportado por (nombre del usuario)
+Button — Navegar a la ubicación
+Si es el creador: Button "Marcar como resuelto"
+CreateReporteCallejeroPage
+
+Tipo: ContentPage (modal)
+Objetivo: Reportar un animal callejero (herido, perdido, etc.).
+Componentes:
+Image con MediaPicker (foto obligatoria)
+Button — Usar ubicación actual / Seleccionar en mapa
+Map pequeño de confirmación
+Editor — Descripción detallada
+Button — Enviar reporte
+7. Notificaciones
+NotificacionesPage
+
+Tipo: ContentPage (Shell Tab 4)
+Objetivo: Ver y gestionar las notificaciones del usuario (avistamientos de su mascota, solicitudes de adopción, calificaciones, etc.).
+Componentes:
+Button "Marcar todas como leídas" (visible si hay no leídas)
+CollectionView con SwipeView:
+NotificacionItem: ícono por tipo, título, cuerpo (truncado), fecha relativa, indicador de no leída (punto azul)
+Swipe left → delete
+EmptyView — "No tienes notificaciones"
+Badge en el tab con contador de no leídas
+NotificacionesPreferenciasPage
+
+Tipo: ContentPage (push desde PerfilPage)
+Objetivo: Activar/desactivar tipos de notificaciones push.
+Componentes:
+Switch rows para cada tipo:
+Avistamientos de mi mascota
+Solicitudes de adopción
+Nuevos extravíos cercanos
+Calificaciones recibidas
+Reportes callejeros cercanos
+Button — Guardar preferencias
+8. Perfil y Configuración
+PerfilPage
+
+Tipo: ContentPage (Shell Tab 5)
+Objetivo: Ver el perfil del usuario autenticado y acceder a todas las configuraciones.
+Componentes:
+Image circular — Avatar (tappable para cambiar)
+Label — Nombre, correo
+StarRating display — Calificación promedio
+HorizontalStackLayout de estadísticas: Mascotas · Adopciones · Avistamientos
+Lista de opciones (CollectionView o VerticalStackLayout):
+Mis mascotas → MascotasPage
+Mis adopciones → MisAdopcionesPage
+Estadísticas → EstadisticasPage
+Editar perfil → EditPerfilPage
+Cambiar contraseña → ChangePasswordPage
+Preferencias de notificaciones → NotificacionesPreferenciasPage
+Cerrar sesión (con confirmación)
+Versión de la app al pie
+EditPerfilPage
+
+Tipo: ContentPage (modal)
+Objetivo: Editar nombre, teléfono y foto de perfil.
+Componentes:
+Image circular con TapGestureRecognizer → MediaPicker
+Entry — Nombre
+Entry — Teléfono
+Button — Guardar cambios
+ActivityIndicator
+ChangePasswordPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Cambiar la contraseña de la cuenta.
+Componentes:
+Entry — Contraseña actual (IsPassword)
+Entry — Nueva contraseña (IsPassword, con indicador de fortaleza)
+Entry — Confirmar nueva contraseña
+Button — Guardar
+Mensajes de error inline
+EstadisticasPage
+
+Tipo: ContentPage (push navigation)
+Objetivo: Ver logros, estadísticas de actividad y calificaciones recibidas.
+Componentes:
+Tarjetas de métricas: Mascotas registradas, Adopciones concretadas, Avistamientos reportados, Reportes callejeros
+CollectionView de Insignias/Badges (imagen + nombre + descripción)
+CollectionView de calificaciones recibidas (estrella, comentario, de quién, fecha)
+9. Pantallas reutilizables (compartidas)
+MapPickerPage
+
+Tipo: ContentPage (modal, reutilizada desde múltiples pantallas)
+Objetivo: Permitir al usuario seleccionar una ubicación geográfica en el mapa.
+Componentes:
+Map a pantalla completa con pin draggable
+SearchBar — Buscar dirección (opcional)
+Button — Usar mi ubicación actual (Geolocation.GetLastKnownLocationAsync)
+Label — Coordenadas seleccionadas (lat, lon)
+Button — Confirmar selección
+ImageViewerPage
+
+Tipo: ContentPage (modal)
+Objetivo: Ver una imagen a pantalla completa con zoom.
+Componentes:
+Image con PinchGestureRecognizer y PanGestureRecognizer para zoom/paneo
+Botón de cierre (X)
+Si hay múltiples fotos: CarouselView
+Resumen de pantallas
+#	Pantalla	Tipo	Tab/Sección
+1	SplashPage	ContentPage	—
+2	LoginPage	ContentPage	Auth
+3	RegisterPage	ContentPage (modal)	Auth
+4	FeedPage	ContentPage	Tab 1
+5	ExtraviosPage	ContentPage	Tab 2
+6	ExtravioDetailPage	ContentPage	Extravíos
+7	CreateExtravioPage	ContentPage (modal)	Extravíos
+8	AvistamientosListPage	ContentPage	Extravíos
+9	CreateAvistamientoPage	ContentPage (modal)	Extravíos
+10	AvistamientoDetailPage	ContentPage	Extravíos
+11	AdopcionesPage	ContentPage	Tab 3
+12	AdopcionDetailPage	ContentPage	Adopciones
+13	CreateAdopcionPage	ContentPage (modal)	Adopciones
+14	MisAdopcionesPage	ContentPage	Adopciones
+15	NotificacionesPage	ContentPage	Tab 4
+16	NotificacionesPreferenciasPage	ContentPage	Notificaciones
+17	PerfilPage	ContentPage	Tab 5
+18	EditPerfilPage	ContentPage (modal)	Perfil
+19	ChangePasswordPage	ContentPage	Perfil
+20	EstadisticasPage	ContentPage	Perfil
+21	MascotasPage	ContentPage	Perfil/Flyout
+22	MascotaDetailPage	ContentPage	Mascotas
+23	CreateMascotaPage	ContentPage (modal)	Mascotas
+24	EditMascotaPage	ContentPage (modal)	Mascotas
+25	ReportesCallejerosPage	ContentPage	Feed/Flyout
+26	ReporteCallejeroDetailPage	ContentPage	Callejeros
+27	CreateReporteCallejeroPage	ContentPage (modal)	Callejeros
+28	MapPickerPage	ContentPage (modal)	Reutilizable
+29	ImageViewerPage	ContentPage (modal)	Reutilizable
+Total: 29 pantallas, todas ContentPage enrutadas a través de AppShell. Las marcadas como "modal" se navegan con Shell.GoToAsync("...", animate: true) con presentación modal.

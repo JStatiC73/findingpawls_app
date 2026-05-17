@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:conv="clr-namespace:FindingPawls.Converters"
+    x:Class="FindingPawls.App">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Tokens de color: debe ir primero porque Styles.xaml los referencia -->
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <!-- Estilos globales: botones, labels, cards, etc. -->
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters registrados globalmente para uso en cualquier pagina XAML.
+                 El namespace conv: se declara una sola vez en el elemento raiz Application. -->
+            <conv:InvertBoolConverter x:Key="InvertBool" />
+            <conv:NotNullOrEmptyToBoolConverter x:Key="NotNullOrEmpty" />
+            <conv:EstadoMascotaColorConverter x:Key="EstadoColor" />
+            <conv:TipoFeedColorConverter x:Key="TipoFeedColor" />
+            <conv:DistanciaTextoConverter x:Key="DistanciaTexto" />
+            <conv:FechaRelativaConverter x:Key="FechaRelativa" />
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisible" />
+            <conv:UrlToImageSourceConverter x:Key="UrlToImage" />
+            <conv:CountToVisibilityConverter x:Key="CountToVisible" />
+            <conv:BoolToPasswordIconConverter x:Key="PasswordIcon" />
+        </ResourceDictionary>
+    </Application.Resources>
+
+</Application>

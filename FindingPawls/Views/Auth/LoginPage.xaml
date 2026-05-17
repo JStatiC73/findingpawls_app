@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FindingPawls.ViewModels.Auth"
+    x:Class="FindingPawls.Views.Auth.LoginPage"
+    x:DataType="vm:LoginViewModel"
+    Title=""
+    Shell.NavBarIsVisible="False">
+
+    <!-- ScrollView permite adaptarse a teclados emergentes en pantallas pequenas -->
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*,Auto" MinimumHeightRequest="600">
+
+            <!-- Encabezado con degradado verde -->
+            <Grid Grid.Row="0">
+                <BoxView HeightRequest="300">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2E7D5E" Offset="0.0" />
+                            <GradientStop Color="#4CAF82" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+                <!-- Circulo decorativo superior derecho -->
+                <Ellipse
+                    WidthRequest="160"
+                    HeightRequest="160"
+                    Fill="#1AFFFFFF"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="0,-50,-50,0" />
+
+                <!-- Circulo decorativo inferior izquierdo -->
+                <Ellipse
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Fill="#15FFFFFF"
+                    HorizontalOptions="Start"
+                    VerticalOptions="End"
+                    Margin="-30,0,0,-30" />
+
+                <!-- Logo y titulo centrados -->
+                <VerticalStackLayout
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Spacing="14"
+                    Padding="0,48,0,48">
+
+                    <!-- Logo generado: lupa con huellas de animales -->
+                    <Border
+                        WidthRequest="96"
+                        HeightRequest="96"
+                        StrokeShape="RoundRectangle 24"
+                        BackgroundColor="#FFFFFFFF"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center">
+                        <Border.Shadow>
+                            <Shadow Brush="#40000000" Offset="0,4" Radius="12" Opacity="0.3" />
+                        </Border.Shadow>
+                        <Image
+                            Source="logo_finding_pawls.jpg"
+                            WidthRequest="72"
+                            HeightRequest="72"
+                            Aspect="AspectFit"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label
+                            Text="Finding Pawls"
+                            FontFamily="InterBold"
+                            FontSize="26"
+                            TextColor="White"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center" />
+                        <Label
+                            Text="Bienvenido de vuelta"
+                            FontFamily="InterRegular"
+                            FontSize="14"
+                            TextColor="#C8F0DC"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Tarjeta blanca con formulario, superpuesta al encabezado -->
+            <Border
+                Grid.Row="1"
+                BackgroundColor="{StaticResource ColorBackground}"
+                StrokeShape="RoundRectangle 32,32,0,0"
+                StrokeThickness="0"
+                Margin="0,-28,0,0"
+                Padding="28,32,28,24">
+
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Campo Correo -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label
+                            Text="Correo electronico"
+                            FontFamily="InterSemiBold"
+                            FontSize="13"
+                            TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Entry
+                                Text="{Binding Correo}"
+                                Placeholder="tu@correo.com"
+                                Keyboard="Email"
+                                ReturnType="Next"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}"
+                                BackgroundColor="Transparent"
+                                BorderWidth="0" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Contrasena con boton de ojo -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label
+                            Text="Contrasena"
+                            FontFamily="InterSemiBold"
+                            FontSize="13"
+                            TextColor="{StaticResource ColorTextSecondary}" />
+                        <Border Style="{StaticResource EntryBordered}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Entry
+                                    Grid.Column="0"
+                                    Text="{Binding Contrasena}"
+                                    Placeholder="Tu contrasena"
+                                    IsPassword="{Binding MostrarContrasena, Converter={StaticResource InvertBool}}"
+                                    ReturnType="Done"
+                                    ReturnCommand="{Binding IniciarSesionCommand}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}"
+                                    BackgroundColor="Transparent"
+                                    BorderWidth="0"
+                                    VerticalOptions="Center" />
+
+                                <!-- Boton de ojo para ver/ocultar contrasena.
+                                     BoolToPasswordIconConverter retorna 👁 u 🙈 segun el estado. -->
+                                <Button
+                                    Grid.Column="1"
+                                    Text="{Binding MostrarContrasena, Converter={StaticResource PasswordIcon}}"
+                                    Command="{Binding AlternarVisibilidadContrasenaCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource ColorTextSecondary}"
+                                    FontSize="20"
+                                    WidthRequest="52"
+                                    HeightRequest="52"
+                                    Padding="0" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Mensaje de error inline -->
+                    <Border
+                        IsVisible="{Binding MostrarError}"
+                        BackgroundColor="{StaticResource ColorErrorContainer}"
+                        StrokeShape="RoundRectangle 10"
+                        StrokeThickness="0"
+                        Padding="14,10">
+                        <Label
+                            Text="{Binding ErrorMessage}"
+                            FontFamily="InterRegular"
+                            FontSize="13"
+                            TextColor="{StaticResource ColorError}" />
+                    </Border>
+
+                    <!-- Boton principal de login -->
+                    <Button
+                        Text="Iniciar sesion"
+                        Command="{Binding IniciarSesionCommand}"
+                        Style="{StaticResource ButtonPrimary}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}"
+                        Margin="0,8,0,0" />
+
+                    <!-- Indicador de carga -->
+                    <ActivityIndicator
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"
+                        HorizontalOptions="Center" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Pie de pagina: link a registro -->
+            <HorizontalStackLayout
+                Grid.Row="2"
+                HorizontalOptions="Center"
+                Spacing="0"
+                Padding="0,8,0,32">
+                <Label
+                    Text="¿No tienes cuenta?  "
+                    FontFamily="InterRegular"
+                    FontSize="14"
+                    TextColor="{StaticResource ColorTextSecondary}"
+                    VerticalOptions="Center" />
+                <Button
+                    Text="Registrate"
+                    Command="{Binding IrARegistroCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource ColorPrimary}"
+                    FontFamily="InterSemiBold"
+                    FontSize="14"
+                    HeightRequest="44"
+                    Padding="4,0" />
+            </HorizontalStackLayout>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
